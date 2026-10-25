@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173d68">
+<title>Löwenwerk – Datei teilen</title>
+<style>
+:root{--blue:#173d68;--gold:#f3bd42;--bg:#f4f6f9;--ink:#182334;--muted:#667085;--line:#e4e8ef}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--blue);color:white;padding:24px 18px 30px;border-radius:0 0 26px 26px}
+.wrap{max-width:900px;margin:auto}.brand{display:flex;align-items:center;gap:12px}.lion{display:grid;place-items:center;width:48px;height:48px;background:var(--gold);color:var(--blue);border-radius:15px;font-size:27px}
+h1{font-size:23px;margin:0} .tag{font-size:13px;opacity:.8;margin-top:3px}.welcome{margin-top:25px;font-size:25px;font-weight:750}.welcome small{display:block;font-size:14px;font-weight:400;opacity:.82;margin-top:5px}
+main{max-width:900px;margin:-12px auto 40px;padding:0 16px}.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:15px;box-shadow:0 4px 18px #172b4d08}
+h2{font-size:17px;margin:0 0 12px}.muted{color:var(--muted);font-size:13px;line-height:1.5}
+.auth{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{width:100%;padding:12px 13px;border:1px solid #d5dce6;border-radius:11px;font:inherit;background:#fff}.full{grid-column:1/-1}
+button{border:0;border-radius:11px;padding:12px 15px;background:var(--blue);color:white;font:600 14px system-ui;cursor:pointer}.secondary{background:#eef2f8;color:var(--blue)}.gold{background:var(--gold);color:#173d68}.notice{display:none;background:#fff6d9;border:1px solid #f1d37c;border-radius:10px;padding:10px 12px;font-size:13px;margin-top:10px}
+.upload{border:2px dashed #c7d3e2;border-radius:15px;padding:22px 14px;text-align:center;background:#fbfcfe}.upload .symbol{font-size:30px}.upload input{max-width:100%;margin:12px auto;display:block}.file-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.file-row:last-child{border-bottom:0}.file-icon{width:42px;height:42px;border-radius:12px;background:#eef2f8;display:grid;place-items:center;font-size:21px}.file-info{flex:1;min-width:0}.file-name{font-weight:650;overflow-wrap:anywhere}.file-size{font-size:12px;color:var(--muted);margin-top:3px}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{padding:8px 10px;font-size:12px}.empty{text-align:center;padding:18px;color:var(--muted);font-size:14px}.foot{text-align:center;color:var(--muted);font-size:12px;padding:10px 15px 25px}
+@media(max-width:560px){.auth{grid-template-columns:1fr}.full{grid-column:auto}.file-row{align-items:flex-start}.actions{max-width:100%}.actions button{padding:8px}.welcome{font-size:22px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand"><div class="lion">🦁</div><div><h1>Löwenwerk</h1><div class="tag">Dateien. Einfach. Gemeinsam.</div></div></div>
+  <div class="welcome">Deine Dateien an einem Ort.<small>Hochladen, verwalten und sicher mit anderen teilen.</small></div>
+</div></header>
+<main>
+  <section class="panel">
+    <h2>🔐 Dein Benutzerkonto</h2>
+    <p class="muted">Hier melden sich Nutzer später mit ihrer E-Mail-Adresse an. Die echte Anmeldung wird im nächsten Schritt eingerichtet.</p>
+    <div class="auth">
+      <input class="field" id="email" type="email" placeholder="E-Mail-Adresse" autocomplete="email">
+      <input class="field" id="password" type="password" placeholder="Passwort" autocomplete="current-password">
+      <button class="gold" onclick="demoAuth('registrieren')">Konto erstellen</button>
+      <button class="secondary" onclick="demoAuth('anmelden')">Anmelden</button>
+    </div>
+    <div class="notice" id="authNotice"></div>
+  </section>
+  <section class="panel">
+    <h2>⬆️ Datei hochladen</h2>
+    <div class="upload"><div class="symbol">📁</div><strong>Wähle eine Datei aus</strong><p class="muted">Bis zu 50 MB pro Datei · PDF, Fotos, Dokumente und mehr</p>
+      <input type="file" id="fileInput">
+      <button onclick="addFile()">Datei zur Vorschau hinzufügen</button>
+    </div>
+    <p class="muted">Hinweis: Diese erste Vorschau speichert Dateien nicht online und überträgt sie nicht an andere Geräte.</p>
+  </section>
+  <section class="panel">
+    <h2>📄 Meine Dateien <span id="count" class="muted">(0)</span></h2>
+    <div id="files" class="empty">Noch keine Dateien in dieser Vorschau.</div>
+  </section>
+</main>
+<div class="foot">Löwenwerk · Erste App-Vorschau · Online-Konten und Teilen richten wir als Nächstes ein.</div>
+<script>
+const demoFiles=[];
+function sizeText(n){if(n<1024)return n+' B';if(n<1024*1024)return (n/1024).toFixed(1)+' KB';return (n/1024/1024).toFixed(1)+' MB'}
+function demoAuth(action){const e=document.getElementById('email').value.trim(),p=document.getElementById('password').value;const n=document.getElementById('authNotice');n.style.display='block';n.textContent=(!e||!p)?'Bitte gib eine E-Mail-Adresse und ein Passwort ein.':'Die '+action+'-Funktion ist noch nicht verbunden. Das richten wir im nächsten Schritt ein.'}
+function addFile(){const input=document.getElementById('fileInput');const f=input.files[0];if(!f){alert('Bitte zuerst eine Datei auswählen.');return}if(f.size>50*1024*1024){alert('Die Datei ist größer als 50 MB.');return}demoFiles.push({name:f.name,size:f.size,type:f.type||'',file:f});render();input.value=''}
+function render(){const root=document.getElementById('files');document.getElementById('count').textContent='('+demoFiles.length+')';if(!demoFiles.length){root.className='empty';root.textContent='Noch keine Dateien in dieser Vorschau.';return}root.className='';root.innerHTML='';demoFiles.forEach((f,i)=>{const row=document.createElement('div');row.className='file-row';const ico=document.createElement('div');ico.className='file-icon';ico.textContent=f.type.startsWith('image/')?'🖼️':f.type.includes('pdf')?'📕':'📄';const info=document.createElement('div');info.className='file-info';const name=document.createElement('div');name.className='file-name';name.textContent=f.name;const size=document.createElement('div');size.className='file-size';size.textContent=sizeText(f.size);info.append(name,size);const acts=document.createElement('div');acts.className='actions';const dl=document.createElement('button');dl.className='secondary';dl.textContent='Download';dl.onclick=()=>{const u=URL.createObjectURL(f.file);const a=document.createElement('a');a.href=u;a.download=f.name;a.click();URL.revokeObjectURL(u)};const share=document.createElement('button');share.className='secondary';share.textContent='Teilen';share.onclick=()=>alert('Echte Freigabe-Links richten wir ein, sobald der Online-Speicher verbunden ist.');const del=document.createElement('button');del.className='secondary';del.textContent='Entfernen';del.onclick=()=>{demoFiles.splice(i,1);render()};acts.append(dl,share,del);row.append(ico,info,acts);root.append(row)})}
+</script>
+</body></html>
